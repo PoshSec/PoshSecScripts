@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schedule xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="poshsecframework.Utility">
+  <ScheduleItems>
+    <ScheduleItem>
+      <ScriptName>startupprograms.ps1</ScriptName>
+      <ScriptPath>C:\Development\github\PoshSecFramework\Scripts and Modules\Scripts\System Information\startupprograms.ps1</ScriptPath>
+      <Parameters>
+        <Properties>
+          <psparameter>
+            <Name>showintab</Name>
+            <Description>Specifies whether to show the results in a PoshSec Framework Tab.</Description>
+            <Category>Optional</Category>
+            <DefaultValue xsi:type="xsd:boolean">true</DefaultValue>
+            <IsFileName>false</IsFileName>
+            <IsHostList>false</IsHostList>
+            <TypeName>System.Boolean</TypeName>
+          </psparameter>
+          <psparameter>
+            <Name>storedhosts</Name>
+            <Description>This is for storing hosts from the framework for scheduling.</Description>
+            <Category>Optional</Category>
+            <IsFileName>false</IsFileName>
+            <IsHostList>true</IsHostList>
+            <TypeName />
+          </psparameter>
+        </Properties>
+      </Parameters>
+      <ScheduledTime>
+        <StartTime>2014-01-06T08:10:07</StartTime>
+        <Frequency>Daily</Frequency>
+        <DaysofWeek />
+        <Months />
+        <Dates />
+      </ScheduledTime>
+      <RunAs>CurrentUser</RunAs>
+      <LastRunTime>01/22/2014 08:10 AM</LastRunTime>
+      <Message />
+      <Index>2</Index>
+    </ScheduleItem>
+  </ScheduleItems>
+</Schedule>
