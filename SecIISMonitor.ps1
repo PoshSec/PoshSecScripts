@@ -22,9 +22,6 @@
    Start-SecIISMonitor -filter "robots.txt"
 
 #>
-#Required to use PoshSec functions
-Import-Module $PSModRoot\PoshSec
-
 param(
   [String]$IP = "",
   [String]$filter = "",
@@ -32,6 +29,9 @@ param(
   [String]$path = "C:\inetpub\logs\LogFiles\W3SVC1\",
   [int]$poll = 10
 )
+
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
 
 while($true){
   if([System.Net.IPAddress]::TryParse($IP,[ref] $null)){
