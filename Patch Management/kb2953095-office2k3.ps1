@@ -7,6 +7,10 @@
   that account under HKEY_CURRENT_USER has the DWORD of RtfFiles
   set to 1 under
   HKEY_CURRENT_USER\Software\Microsoft\Office\11.0\Word\Security\FileOpenBlock
+
+REQUIRES
+  PoshSec Modules: Get-RemoteRegistry, Get-RemoteRegistryKey, Get-RemoteRegistryValue
+  Download from here -> https://github.com/PoshSec/PoshSec/tree/development
   
 ADVISORIES
 https://technet.microsoft.com/en-us/security/advisory/2953095
