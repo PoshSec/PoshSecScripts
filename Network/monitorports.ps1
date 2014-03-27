@@ -22,10 +22,23 @@ Import-Module $PSModRoot\PoshSec
 [boolean]$scan = $True;
 $baseline = @()
 $active = @()
+
+#these are the ports that will raise an alert regardless of whitelists
+$remoteportalert = @(4444)
+$localportalert = @(4444)
+
+#these are the ports to allow and will not raise an alert
 $remoteportwhitelist = @(0,995,80,443)
-$processwhitelist = @("ssh-agent", "firefox", "tweetdeck", "thunderbird", "Idle")
+
+#these are the process names or IDs that will not raise an alert
+#example $processwhitelist = @("firefox", "Idle", 0)
+$processwhitelist = @("Idle", "0")
+
+#these are the ips that will not raise an alert
+#example $localipwhitelist = @("192.168.1.1", "127.0.0.1")
 $localipwhitelist = @("127.0.0.1")
 $remoteipwhitelist = @("127.0.0.1")
+
 $compname = $computer
 if($computer -eq "") {
   $compname = Get-Content env:ComputerName
@@ -45,26 +58,40 @@ do
   
   foreach($rslt in $rslts)
   {
-    if(($rslt.InputObject.State -eq "ESTABLISHED") -and
-        ($rslt.SideIndicator -eq "=>") -and
-        ($remoteportwhitelist -notcontains $rslt.InputObject.RemotePort) -and
-        ($processwhitelist -notcontains $rslt.InputObject.ProcessName) -and
-        ($localipwhitelist -notcontains $rslt.InputObject.LocalAddress) -and
-        ($remoteipwhitelist -notcontains $rslt.InputObject.RemoteAddress))
+    if(($rslt.SideIndicator -eq "=>") -and
+      (
+        (
+          ($remoteportwhitelist -notcontains $rslt.InputObject.RemotePort) -and
+          ($processwhitelist -notcontains $rslt.InputObject.ProcessName) -and
+          ($localipwhitelist -notcontains $rslt.InputObject.LocalAddress) -and
+          ($remoteipwhitelist -notcontains $rslt.InputObject.RemoteAddress)
+        ) -or
+          ($remoteportalert -contains $rslt.InputObject.RemotePort) -or
+          ($localportalert -contains $rslt.InputObject.LocalPort)
+        )
+      )
     {
       $protocol = $rslt.InputObject.Protocol
       $local = $rslt.InputObject.LocalAddress + ":" + $rslt.InputObject.LocalPort
       $remote = $rslt.InputObject.RemoteAddress + ":" + $rslt.InputObject.RemotePort
       $pname = $rslt.InputObject.ProcessName
+      $state = $rslt.InputObject.State
       
-      $PSAlert.Add("[$compname]Port Opened: $protocol $($local)<=>$($remote) ($pname)", 2)
+      $PSAlert.Add("[$compname]Port $($state): $protocol $($local)<=>$($remote) ($pname)", 2)
       $baseline += $rslt.InputObject
     }
     elseif(($rslt.SideIndicator -eq "<=") -and
-        ($remoteportwhitelist -notcontains $rslt.InputObject.RemotePort) -and
-        ($processwhitelist -notcontains $rslt.InputObject.ProcessName) -and
-        ($localipwhitelist -notcontains $rslt.InputObject.LocalAddress) -and
-        ($remoteipwhitelist -notcontains $rslt.InputObject.RemoteAddress))
+      (
+        (
+          ($remoteportwhitelist -notcontains $rslt.InputObject.RemotePort) -and
+          ($processwhitelist -notcontains $rslt.InputObject.ProcessName) -and
+          ($localipwhitelist -notcontains $rslt.InputObject.LocalAddress) -and
+          ($remoteipwhitelist -notcontains $rslt.InputObject.RemoteAddress)
+        ) -or
+          ($remoteportalert -contains $rslt.InputObject.RemotePort) -or
+          ($localportalert -contains $rslt.InputObject.LocalPort)
+        )
+      )
     {
       $protocol = $rslt.InputObject.Protocol
       $local = $rslt.InputObject.LocalAddress + ":" + $rslt.InputObject.LocalPort
