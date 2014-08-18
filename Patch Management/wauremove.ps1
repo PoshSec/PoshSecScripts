@@ -34,7 +34,7 @@ Param(
 )
 
 Function Remove-KBs($pcname, $kb){
-	Invoke-RemoteWmiProcess $pcname "wusa.exe /uninstall /kb:$($kb) /quiet /norestart" -noredirect
+	Invoke-RemoteWmiProcess $pcname "wusa.exe /uninstall /kb:$($kb) /quiet /norestart" -noredirect -nowait
 }
 
 Function Get-KBs($pcname){
